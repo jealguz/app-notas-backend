@@ -24,7 +24,6 @@
             "dont-discover": []
         }
     },
-
     "scripts": {
         "post-install-cmd": [
             "php artisan optimize",
@@ -54,7 +53,6 @@
             "@php artisan test"
         ]
     },
-
     "autoload": {
         "psr-4": {
             "App\\": "app/",
@@ -67,7 +65,6 @@
             "Tests\\": "tests/"
         }
     },
-
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",

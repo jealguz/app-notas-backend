@@ -11,24 +11,20 @@ RUN apk add --no-cache \
     libzip-dev \
     sqlite-dev \
     oniguruma-dev \
-    # Para PostgreSQL
-    libpq-dev \
+    libpq-dev \ # Para PostgreSQL
     libpng-dev \
     jpeg-dev \
     freetype-dev \
-    # Necesario para Composer
-    git \
+    git \ # Necesario para Composer
     zip \
     unzip \
-    && docker-php-ext-install pdo_mysql \
-    # Si usas PostgreSQL, instala esta (usa la que necesites)
-    && docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-install pdo_mysql \ # Si usas MySQL, instala esta
+    && docker-php-ext-install pdo_pgsql \ # Si usas PostgreSQL, instala esta (usa la que necesites)
     && docker-php-ext-install zip \
     && docker-php-ext-install exif \
     && docker-php-ext-install pcntl \
     && docker-php-ext-install bcmath \
-    # Para manipulación de imágenes
-    && docker-php-ext-install gd \
+    && docker-php-ext-install gd \ # Para manipulación de imágenes
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && rm -rf /var/cache/apk/*
@@ -38,7 +34,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Configurar Nginx para Laravel
 COPY .docker/nginx/default.conf /etc/nginx/http.d/default.conf
-
 
 # Configurar PHP FPM
 COPY .docker/php/www.conf /etc/php8/php-fpm.d/www.conf
@@ -57,19 +52,16 @@ RUN rm -rf vendor
 # No uses --no-dev aquí si tu aplicación usa cosas de dev en producción, pero para Laravel API suele ser --no-dev
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Ejecutar comandos Artisan después de la instalación de Composer
-RUN php artisan key:generate --force --ansi \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache \
-    && php artisan event:cache \
-    && php artisan optimize:clear
+# EXCLUIDA la línea `php artisan key:generate` de aquí.
+# EXCLUIDOS los comandos `php artisan config:cache`, `route:cache`, etc. de aquí.
+# Ahora se ejecutarán en el CMD.
 
 # Exponer el puerto
 EXPOSE 8000
 
 # Script de inicio
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Los comandos de caché y migraciones se ejecutan aquí, cuando las variables de entorno están disponibles.
+CMD bash -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache && php artisan optimize:clear && php artisan migrate --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
 # ---- Configuración de Supervisor, Nginx y PHP-FPM ----
 # Crear carpetas para logs y supervisor

@@ -54,11 +54,13 @@ RUN rm -rf vendor
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Crear carpetas para logs y supervisor (Si no existen ya)
-# Asegúrate de que Supervisor y Nginx puedan escribir en ellas.
+# Y establecer los permisos para los logs de Nginx
 RUN mkdir -p /var/log/nginx \
              /var/log/supervisor \
              /run/nginx \
-             /var/www/html/storage/logs
+             /var/www/html/storage/logs \
+    && chown -R www-data:www-data /var/log/nginx \
+    && chmod -R 755 /var/log/nginx
 
 # Configurar Supervisor (copiar el archivo de configuración)
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -74,7 +76,7 @@ COPY .docker/php/php.ini /etc/php8/conf.d/custom.ini
 # Es crucial que www-data (el usuario que ejecuta PHP-FPM y Nginx) pueda escribir aquí
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
-    # Añadido: asegurar que www-data tiene acceso de lectura/ejecución a toda la app
+    # Asegurar que www-data tiene acceso de lectura/ejecución a toda la app
     && chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} + \
     && find /var/www/html -type f -exec chmod 644 {} +

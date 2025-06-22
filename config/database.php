@@ -84,12 +84,16 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            // Usamos 'DATABASE_URL' directamente para que Laravel la parseé
+            // y no necesitamos host, port, database, username, password explícitos aquí.
+            'url' => env('DATABASE_URL'),
+            // Las siguientes líneas se han ELIMINADO para evitar conflictos
+            // con DATABASE_URL y los valores por defecto de 127.0.0.1.
+            // 'host' => env('DB_HOST', '127.0.0.1'),
+            // 'port' => env('DB_PORT', '5432'),
+            // 'database' => env('DB_DATABASE', 'laravel'),
+            // 'username' => env('DB_USERNAME', 'root'),
+            // 'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,

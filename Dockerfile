@@ -61,7 +61,8 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 EXPOSE 8000
 
 # Script de inicio
-CMD sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache && php artisan optimize:clear && php artisan migrate --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+# Ejecutar migraciones primero, luego comandos de caché, y finalmente iniciar los servicios.
+CMD sh -c "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache && php artisan optimize:clear && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
 # ---- Configuración de Supervisor, Nginx y PHP-FPM ----
 # Crear carpetas para logs y supervisor

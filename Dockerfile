@@ -4,6 +4,9 @@ FROM php:8.2-fpm-alpine
 # Establecer el directorio de trabajo desde el principio
 WORKDIR /var/www/html
 
+# Añadir /usr/local/sbin al PATH para que el sistema encuentre ejecutables como php-fpm si están allí
+ENV PATH="/usr/local/sbin:${PATH}"
+
 # Instalar dependencias del sistema operativo y extensiones PHP necesarias para Laravel
 RUN apk add --no-cache \
     nginx \

@@ -39,7 +39,7 @@ RUN apk add --no-cache \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Configurar Nginx para Laravel
-COPY .docker/nginx/default.conf /etc/nginx/http.d/default.conf
+COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Configurar PHP FPM
 COPY .docker/php/www.conf /etc/php8/php-fpm.d/www.conf

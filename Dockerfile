@@ -52,6 +52,7 @@ RUN mkdir -p /var/log/nginx \
              /var/log/supervisor \
              /run/nginx \
              /var/www/html/storage/logs \
+             /etc/php8/php-fpm.d \
     && chown -R www-data:www-data /var/log/nginx \
     && chmod -R 755 /var/log/nginx
 

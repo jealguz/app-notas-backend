@@ -76,8 +76,18 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && find /var/www/html -type d -exec chmod 755 {} + \
     && find /var/www/html -type f -exec chmod 644 {} +
 
+
+    # Verificar la configuración de PHP-FPM y PHP para depuración
+RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
+RUN php -i | grep "error_log" # Verifica que error_log esté configurado correctamente
+RUN php -i | grep "display_errors" # Verifica que display_errors esté On
+RUN php -i | grep "display_startup_errors" # Verifica que display_startup_errors esté On
+RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configurado correctamente
+
 # Exponer el puerto que Nginx está escuchando
 EXPOSE 10000
+
+
 
 # Script de inicio
 CMD sh -c "php artisan migrate --force && \

@@ -36,7 +36,7 @@ RUN apk add --no-cache \
     # Si el error persiste, podríamos probar una base diferente o buscar el nombre exacto del paquete de desarrollo de GD para Alpine 8.2
 
 # Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configurar Nginx para Laravel
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf

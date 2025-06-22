@@ -62,8 +62,9 @@ COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Configurar PHP FPM
-COPY .docker/php/www.conf /etc/php8/php-fpm.d/www.conf
-COPY .docker/php/php.ini /etc/php8/conf.d/custom.ini
+# Configurar PHP FPM (temporalmente comentado para depuración de FPM)
+# COPY .docker/php/www.conf /etc/php8/php-fpm.d/www.conf
+# COPY .docker/php/php.ini /etc/php8/conf.d/custom.ini
 
 # Permisos para la carpeta storage de Laravel y cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \

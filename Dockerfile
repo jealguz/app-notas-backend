@@ -28,14 +28,14 @@ RUN apt-get update && apt-get install -y \
 
 # Instalar extensiones PHP usando docker-php-ext-install
 # Mantendremos esto comentado por ahora, para no añadir complejidad extra si no es la causa del problema.
-# RUN docker-php-ext-install pdo_mysql \
-#     pdo_pgsql \
-#     zip \
-#     exif \
-#     pcntl \
-#     bcmath \
-#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-#     && docker-php-ext-install -j$(nproc) gd
+# ¡AHORA SÍ LAS DESCOMENTAMOS Y LAS INSTALAMOS!
+RUN docker-php-ext-install pdo_pgsql \
+    zip \
+    exif \
+    pcntl \
+    bcmath \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 
 # INSTALAR COMPOSER GLOBALMENTE EN LA IMAGEN
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

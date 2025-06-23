@@ -45,6 +45,15 @@ COPY . .
 # Eliminar la carpeta vendor si existe
 RUN rm -rf vendor
 
+# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
+# ¡¡IMPORTANTE!! ESTO DEBE SER REVERTIDO EN PRODUCCIÓN
+# Crea un .env con APP_DEBUG=true y LOG_CHANNEL=stderr
+# Nota: La APP_KEY se genera aquí para asegurar que exista.
+RUN echo "APP_NAME=Laravel\nAPP_ENV=local\nAPP_DEBUG=true\nLOG_CHANNEL=stderr" > .env && \
+    php artisan key:generate --ansi --force && \
+    chmod 664 .env # Asegurar permisos de lectura para el usuario www-data
+# --- FIN DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
+
 # Comandos de construcción (Instalación de Composer)
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 

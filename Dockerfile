@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /etc/nginx/nginx.conf # Elimina el nginx.conf por defecto para usar el nuestro
 
 # Instalar extensiones PHP usando docker-php-ext-install
 # Mantenemos esto comentado por ahora, para aislar el problema.
@@ -64,21 +65,23 @@ RUN mkdir -p /var/log/nginx \
     /var/www/html/storage/logs \
     /etc/php/8.2/fpm/pool.d \
     /var/lib/nginx/body \
+    /var/run/nginx \ # Nueva carpeta para el PID de Nginx \
     && chown -R www-data:www-data /var/log/nginx \
     && chmod -R 755 /var/log/nginx \
     && chown -R www-data:www-data /var/lib/nginx \
-    && chmod -R 755 /var/lib/nginx
+    && chmod -R 755 /var/lib/nginx \
+    && chown -R www-data:www-data /var/run/nginx \
+    && chmod -R 755 /var/run/nginx
 
-# Crear una configuración mínima para PHP-FPM para asegurar que escucha en el puerto 9000
-# Nota: La ruta de los pools de FPM cambia en Debian
-# Eliminado 'error_log' para evitar error de permisos y confiando en el log a stderr por defecto
-RUN echo "[global]\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
+# Crear una configuración mínima para PHP-FPM, redirigiendo el error_log a un archivo específico
+RUN echo "[global]\nerror_log = /var/log/supervisor/php-fpm_error.log\nlog_limit = 8192\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
 
 # Configurar Supervisor (copiar el archivo de configuración)
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configurar Nginx para Laravel
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Configurar PHP FPM (mantenemos esto comentado por ahora)
 # COPY .docker/php/www.conf /etc/php/8.2/fpm/pool.d/www.conf
@@ -89,9 +92,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} + \
-    && find /var/www/html -type f -exec chmod 644 {} + \
-    && chown -R www-data:www-data /var/run/nginx \
-    && chmod -R 755 /var/run/nginx
+    && find /var/www/html -type f -exec chmod 644 {} +
 
     # Verificar la configuración de PHP-FPM y PHP para depuración
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
@@ -114,8 +115,8 @@ CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 #     php artisan config:cache && \
 #     php artisan route:cache && \
 #     php artisan view:cache && \
-#     php artisan event:cache && \
 #     php artisan optimize:clear && \
+#     php artisan event:cache && \
 #     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
 # Salud

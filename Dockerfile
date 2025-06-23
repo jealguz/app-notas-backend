@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
     && rm -f /etc/nginx/nginx.conf # Elimina el nginx.conf por defecto para usar el nuestro
 
 # Instalar extensiones PHP usando docker-php-ext-install
-# Mantenemos esto comentado por ahora, para aislar el problema.
+# Mantendremos esto comentado por ahora, para no añadir complejidad extra si no es la causa del problema.
 # RUN docker-php-ext-install pdo_mysql \
 #     pdo_pgsql \
 #     zip \
@@ -40,25 +40,29 @@ RUN apt-get update && apt-get install -y \
 # INSTALAR COMPOSER GLOBALMENTE EN LA IMAGEN
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copiar los archivos de la aplicación ANTES de composer install
+# Copiar los archivos de la aplicación
+# Esto debe hacerse ANTES de cualquier comando de composer o artisan que necesite los archivos del proyecto.
 COPY . .
 
-# Eliminar la carpeta vendor si existe
+# Eliminar la carpeta vendor si existe ANTES de la instalación de Composer.
+# Esto asegura una instalación limpia de las dependencias.
 RUN rm -rf vendor
 
-# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
-# ¡¡IMPORTANTE!! ESTO DEBE SER REVERTIDO EN PRODUCCIÓN
-# Crea un .env con APP_DEBUG=true y LOG_CHANNEL=stderr
-RUN echo "APP_NAME=Laravel\nAPP_ENV=local\nAPP_DEBUG=true\nLOG_CHANNEL=stderr" > .env && \
-    chmod 664 .env # Asegurar permisos de lectura para el usuario www-data
-# Eliminado temporalmente 'php artisan key:generate' para depurar
-# Esto causará una advertencia de Laravel sobre la APP_KEY, pero permitirá que APP_DEBUG funcione.
-# --- FIN DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
+# --- REMOVIDA SECCIÓN TEMPORAL PARA DEPURACIÓN DE .ENV ---
+# La línea "RUN echo 'APP_NAME=Laravel...' > .env" ha sido eliminada.
+# Render maneja las variables de entorno de forma segura, y la APP_KEY se generará.
+# --- FIN DE SECCIÓN REMOVIDA ---
 
-# Comandos de construcción (Instalación de Composer)
+# Comandos de construcción de Laravel (Instalación de Composer y optimizaciones)
+# Estos comandos son cruciales para que Laravel funcione correctamente.
 RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN php artisan key:generate --force # Genera la APP_KEY, ¡esencial para Laravel!
+RUN php artisan config:cache          # Optimiza la configuración de Laravel
+RUN php artisan route:cache           # Optimiza las rutas de Laravel
+RUN php artisan view:cache            # Optimiza las vistas de Laravel
+RUN php artisan event:cache           # Opcional: Optimiza los eventos de Laravel
 
-# Crear carpetas para logs y supervisor y establecer permisos
+# Crear carpetas necesarias para logs y procesos, y establecer permisos
 RUN mkdir -p /var/log/nginx \
     /var/log/supervisor \
     /run/nginx \
@@ -88,13 +92,14 @@ COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
 # COPY .docker/php/php.ini /etc/php/8.2/fpm/conf.d/custom.ini
 
 # Permisos para la carpeta storage de Laravel y cache
+# Es importante que esto se ejecute DESPUÉS de que los comandos 'php artisan' hayan creado los archivos de caché.
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} + \
     && find /var/www/html -type f -exec chmod 644 {} +
 
-    # Verificar la configuración de PHP-FPM y PHP para depuración
+# Verificar la configuración de PHP-FPM y PHP para depuración (opcional, puedes removerlas una vez funcione)
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
 RUN php -i | grep "error_log" # Verifica que error_log esté configurado correctamente
 RUN php -i | grep "display_errors" # Verifica que display_errors esté On
@@ -104,20 +109,10 @@ RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configu
 # Exponer el puerto que Nginx está escuchando
 EXPOSE 10000
 
-# Script de inicio (volver a Supervisor)
-CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-
-# Comenta la línea temporal de depuración de Nginx
-# CMD ["nginx", "-g", "daemon off;"]
-
-# Comenta temporalmente las líneas de artisan migrate y cache:
-# CMD sh -c "php artisan migrate --force && \
-#     php artisan config:cache && \
-#     php artisan route:cache && \
-#     php artisan view:cache && \
-#     php artisan optimize:clear && \
-#     php artisan event:cache && \
-#     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+# Script de inicio final (ejecuta migraciones y luego Supervisor)
+# Hemos "descomentado" esta línea y eliminado las líneas temporales.
+CMD sh -c "php artisan migrate --force && \
+    /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
 # Salud
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1

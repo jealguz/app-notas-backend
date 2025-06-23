@@ -26,14 +26,14 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 # Instalar extensiones PHP usando docker-php-ext-install
-RUN docker-php-ext-install pdo_mysql \
-    pdo_pgsql \
-    zip \
-    exif \
-    pcntl \
-    bcmath \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd
+# RUN docker-php-ext-install pdo_mysql \
+#     pdo_pgsql \
+#     zip \
+#     exif \
+#     pcntl \
+#     bcmath \
+#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+#     && docker-php-ext-install -j$(nproc) gd
 
 # INSTALAR COMPOSER GLOBALMENTE EN LA IMAGEN
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -90,13 +90,14 @@ EXPOSE 10000
 
 
 # Script de inicio
-CMD sh -c "php artisan migrate --force && \
-           php artisan config:cache && \
-           php artisan route:cache && \
-           php artisan view:cache && \
-           php artisan event:cache && \
-           php artisan optimize:clear && \
-           /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-
+CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+# Comenta temporalmente las líneas de artisan migrate y cache:
+# CMD sh -c "php artisan migrate --force && \
+#     php artisan config:cache && \
+#     php artisan route:cache && \
+#     php artisan view:cache && \
+#     php artisan event:cache && \
+#     php artisan optimize:clear && \
+#     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 # Salud
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1

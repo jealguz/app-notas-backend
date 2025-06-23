@@ -45,13 +45,13 @@ COPY . .
 # Eliminar la carpeta vendor si existe
 RUN rm -rf vendor
 
-# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
+# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN (MODIFICADO) ---
 # ¡¡IMPORTANTE!! ESTO DEBE SER REVERTIDO EN PRODUCCIÓN
 # Crea un .env con APP_DEBUG=true y LOG_CHANNEL=stderr
-# Nota: La APP_KEY se genera aquí para asegurar que exista.
 RUN echo "APP_NAME=Laravel\nAPP_ENV=local\nAPP_DEBUG=true\nLOG_CHANNEL=stderr" > .env && \
-    php artisan key:generate --ansi --force && \
     chmod 664 .env # Asegurar permisos de lectura para el usuario www-data
+# Eliminado temporalmente 'php artisan key:generate' para depurar
+# Esto causará una advertencia de Laravel sobre la APP_KEY, pero permitirá que APP_DEBUG funcione.
 # --- FIN DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
 
 # Comandos de construcción (Instalación de Composer)
@@ -110,7 +110,4 @@ CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 #     php artisan view:cache && \
 #     php artisan event:cache && \
 #     php artisan optimize:clear && \
-#     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-
-# Salud
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1
+#     /usr/bin/supervisord -c /etc/supervisor/

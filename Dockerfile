@@ -1,5 +1,5 @@
-# Usa una imagen base oficial de PHP con Nginx (ej. de Laravel Sail o FPM)
-FROM php:8.2-fpm-alpine
+# Usa una imagen base oficial de PHP con Nginx (basada en Debian Bullseye)
+FROM php:8.2-fpm-slim-bullseye
 
 # Establecer el directorio de trabajo desde el principio
 WORKDIR /var/www/html
@@ -7,25 +7,26 @@ WORKDIR /var/www/html
 # Añadir /usr/local/sbin al PATH para que el sistema encuentre ejecutables como php-fpm si están allí
 ENV PATH="/usr/local/sbin:${PATH}"
 
-# Instalar dependencias del sistema operativo y extensiones PHP necesarias para Laravel
-RUN apk add --no-cache \
+# Instalar dependencias del sistema operativo y extensiones PHP necesarias para Laravel (usando apt-get)
+RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
-    build-base \
+    build-essential \
     autoconf \
     libzip-dev \
-    sqlite-dev \
-    oniguruma-dev \
+    libsqlite3-dev \
+    libonig-dev \
     libpq-dev \
     git \
     zip \
     unzip \
     libpng-dev \
-    jpeg-dev \
-    freetype-dev \
-    && rm -rf /var/cache/apk/*
+    libjpeg-dev \
+    libfreetype6-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP usando docker-php-ext-install
+# Mantenemos esto comentado por ahora, para aislar el problema.
 # RUN docker-php-ext-install pdo_mysql \
 #     pdo_pgsql \
 #     zip \
@@ -52,12 +53,13 @@ RUN mkdir -p /var/log/nginx \
     /var/log/supervisor \
     /run/nginx \
     /var/www/html/storage/logs \
-    /etc/php8/php-fpm.d \
+    /etc/php/8.2/fpm/pool.d \
     && chown -R www-data:www-data /var/log/nginx \
     && chmod -R 755 /var/log/nginx
 
 # Crear una configuración mínima para PHP-FPM para asegurar que escucha en el puerto 9000
-RUN echo "[global]\nerror_log = /proc/self/fd/2\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php8/php-fpm.d/zz-docker.conf
+# Nota: La ruta de los pools de FPM cambia en Debian
+RUN echo "[global]\nerror_log = /proc/self/fd/2\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
 
 # Configurar Supervisor (copiar el archivo de configuración)
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -65,9 +67,9 @@ COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Configurar Nginx para Laravel
 COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Configurar PHP FPM (temporalmente comentado para depuración de FPM)
-# COPY .docker/php/www.conf /etc/php8/php-fpm.d/www.conf
-# COPY .docker/php/php.ini /etc/php8/conf.d/custom.ini
+# Configurar PHP FPM (mantenemos esto comentado por ahora)
+# COPY .docker/php/www.conf /etc/php/8.2/fpm/pool.d/www.conf
+# COPY .docker/php/php.ini /etc/php/8.2/fpm/conf.d/custom.ini
 
 # Permisos para la carpeta storage de Laravel y cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
@@ -75,7 +77,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} + \
     && find /var/www/html -type f -exec chmod 644 {} +
-
 
     # Verificar la configuración de PHP-FPM y PHP para depuración
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM

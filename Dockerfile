@@ -1,6 +1,6 @@
-# Usa una imagen base oficial de PHP con Nginx (basada en Debian Bullseye)
-# CAMBIO AQUÍ: Usamos la etiqueta 'slim' general
-FROM php:8.2-fpm-slim
+# Usa una imagen base oficial de PHP con Nginx (basada en Debian Bookworm)
+FROM php:8.2-fpm-bookworm
+# CAMBIO AQUÍ: Usamos la etiqueta 'bookworm'
 
 # Establecer el directorio de trabajo desde el principio
 WORKDIR /var/www/html
@@ -60,44 +60,4 @@ RUN mkdir -p /var/log/nginx \
 
 # Crear una configuración mínima para PHP-FPM para asegurar que escucha en el puerto 9000
 # Nota: La ruta de los pools de FPM cambia en Debian
-RUN echo "[global]\nerror_log = /proc/self/fd/2\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
-
-# Configurar Supervisor (copiar el archivo de configuración)
-COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Configurar Nginx para Laravel
-COPY .docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-
-# Configurar PHP FPM (mantenemos esto comentado por ahora)
-# COPY .docker/php/www.conf /etc/php/8.2/fpm/pool.d/www.conf
-# COPY .docker/php/php.ini /etc/php/8.2/fpm/conf.d/custom.ini
-
-# Permisos para la carpeta storage de Laravel y cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chown -R www-data:www-data /var/www/html \
-    && find /var/www/html -type d -exec chmod 755 {} + \
-    && find /var/www/html -type f -exec chmod 644 {} +
-
-    # Verificar la configuración de PHP-FPM y PHP para depuración
-RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
-RUN php -i | grep "error_log" # Verifica que error_log esté configurado correctamente
-RUN php -i | grep "display_errors" # Verifica que display_errors esté On
-RUN php -i | grep "display_startup_errors" # Verifica que display_startup_errors esté On
-RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configurado correctamente
-
-# Exponer el puerto que Nginx está escuchando
-EXPOSE 10000
-
-# Script de inicio
-CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-# Comenta temporalmente las líneas de artisan migrate y cache:
-# CMD sh -c "php artisan migrate --force && \
-#     php artisan config:cache && \
-#     php artisan route:cache && \
-#     php artisan view:cache && \
-#     php artisan event:cache && \
-#     php artisan optimize:clear && \
-#     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-# Salud
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1
+RUN echo "[global]\nerror_log = /proc/self/fd/2\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\

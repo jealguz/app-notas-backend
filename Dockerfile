@@ -63,16 +63,16 @@ RUN mkdir -p /var/log/nginx \
     /run/nginx \
     /var/www/html/storage/logs \
     /etc/php/8.2/fpm/pool.d \
+    /var/lib/nginx/body \
     && chown -R www-data:www-data /var/log/nginx \
-    && chmod -R 755 /var/log/nginx
+    && chmod -R 755 /var/log/nginx \
+    && chown -R www-data:www-data /var/lib/nginx \
+    && chmod -R 755 /var/lib/nginx
 
 # Crear una configuración mínima para PHP-FPM para asegurar que escucha en el puerto 9000
 # Nota: La ruta de los pools de FPM cambia en Debian
-# Eliminado 'error_log = /proc/self/fd/2' de la configuración del pool para evitar error de permisos
+# Eliminado 'error_log' para evitar error de permisos y confiando en el log a stderr por defecto
 RUN echo "[global]\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
-
-# Forzar el error_log global de PHP-FPM a /dev/stderr para asegurar la salida a la consola
-RUN sed -i 's/^error_log = .*$/error_log = \/dev\/stderr/' /usr/local/etc/php-fpm.conf
 
 # Configurar Supervisor (copiar el archivo de configuración)
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

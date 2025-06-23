@@ -90,4 +90,28 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
     # Verificar la configuración de PHP-FPM y PHP para depuración
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
-RUN php -i | grep "error_
+RUN php -i | grep "error_log" # Verifica que error_log esté configurado correctamente
+RUN php -i | grep "display_errors" # Verifica que display_errors esté On
+RUN php -i | grep "display_startup_errors" # Verifica que display_startup_errors esté On
+RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configurado correctamente
+
+# Exponer el puerto que Nginx está escuchando
+EXPOSE 10000
+
+# Script de inicio (volver a Supervisor)
+CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+
+# Comenta la línea temporal de depuración de Nginx
+# CMD ["nginx", "-g", "daemon off;"]
+
+# Comenta temporalmente las líneas de artisan migrate y cache:
+# CMD sh -c "php artisan migrate --force && \
+#     php artisan config:cache && \
+#     php artisan route:cache && \
+#     php artisan view:cache && \
+#     php artisan event:cache && \
+#     php artisan optimize:clear && \
+#     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+
+# Salud
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1

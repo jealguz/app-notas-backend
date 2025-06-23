@@ -89,7 +89,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} + \
-    && find /var/www/html -type f -exec chmod 644 {} +
+    && find /var/www/html -type f -exec chmod 644 {} + \
+    && chown -R www-data:www-data /var/run/nginx \
+    && chmod -R 755 /var/run/nginx
 
     # Verificar la configuración de PHP-FPM y PHP para depuración
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM

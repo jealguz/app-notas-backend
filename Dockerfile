@@ -45,7 +45,7 @@ COPY . .
 # Eliminar la carpeta vendor si existe
 RUN rm -rf vendor
 
-# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN (MODIFICADO) ---
+# --- INICIO DE SECCIÓN TEMPORAL PARA DEPURACIÓN ---
 # ¡¡IMPORTANTE!! ESTO DEBE SER REVERTIDO EN PRODUCCIÓN
 # Crea un .env con APP_DEBUG=true y LOG_CHANNEL=stderr
 RUN echo "APP_NAME=Laravel\nAPP_ENV=local\nAPP_DEBUG=true\nLOG_CHANNEL=stderr" > .env && \
@@ -68,7 +68,8 @@ RUN mkdir -p /var/log/nginx \
 
 # Crear una configuración mínima para PHP-FPM para asegurar que escucha en el puerto 9000
 # Nota: La ruta de los pools de FPM cambia en Debian
-RUN echo "[global]\nerror_log = /proc/self/fd/2\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
+# Eliminado 'error_log = /proc/self/fd/2' para evitar error de permisos
+RUN echo "[global]\n[www]\nlisten = 127.0.0.1:9000\nuser = www-data\ngroup = www-data\npm = dynamic\npm.max_children = 5\npm.start_servers = 2\npm.min_spare_servers = 1\npm.max_spare_servers = 3\nclear_env = no\ncatch_workers_output = yes" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
 
 # Configurar Supervisor (copiar el archivo de configuración)
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -89,25 +90,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
     # Verificar la configuración de PHP-FPM y PHP para depuración
 RUN /usr/local/sbin/php-fpm -t # Prueba la configuración de FPM
-RUN php -i | grep "error_log" # Verifica que error_log esté configurado correctamente
-RUN php -i | grep "display_errors" # Verifica que display_errors esté On
-RUN php -i | grep "display_startup_errors" # Verifica que display_startup_errors esté On
-RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configurado correctamente
-
-# Exponer el puerto que Nginx está escuchando
-EXPOSE 10000
-
-# Script de inicio (volver a Supervisor)
-CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-
-# Comenta la línea temporal de depuración de Nginx
-# CMD ["nginx", "-g", "daemon off;"]
-
-# Comenta temporalmente las líneas de artisan migrate y cache:
-# CMD sh -c "php artisan migrate --force && \
-#     php artisan config:cache && \
-#     php artisan route:cache && \
-#     php artisan view:cache && \
-#     php artisan event:cache && \
-#     php artisan optimize:clear && \
-#     /usr/bin/supervisord -c /etc/supervisor/
+RUN php -i | grep "error_

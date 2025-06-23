@@ -1,5 +1,6 @@
 # Usa una imagen base oficial de PHP con Nginx (basada en Debian Bullseye)
-FROM php:8.2-fpm-slim-bullseye
+# CAMBIO AQUÍ: Usamos la etiqueta 'slim' general
+FROM php:8.2-fpm-slim
 
 # Establecer el directorio de trabajo desde el principio
 WORKDIR /var/www/html

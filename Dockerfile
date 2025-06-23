@@ -88,10 +88,13 @@ RUN php -i | grep "error_reporting" # Verifica que error_reporting esté configu
 # Exponer el puerto que Nginx está escuchando
 EXPOSE 10000
 
-# Script de inicio (TEMPORALMENTE para depurar Nginx)
-CMD ["nginx", "-g", "daemon off;"]
+# Script de inicio (volver a Supervisor)
+CMD sh -c "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
-# Comenta la línea original del CMD de Supervisor y Artisan commands
+# Comenta la línea temporal de depuración de Nginx
+# CMD ["nginx", "-g", "daemon off;"]
+
+# Comenta temporalmente las líneas de artisan migrate y cache:
 # CMD sh -c "php artisan migrate --force && \
 #     php artisan config:cache && \
 #     php artisan route:cache && \

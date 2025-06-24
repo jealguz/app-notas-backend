@@ -101,34 +101,20 @@
 
         // Función para cargar las notas
         async function fetchNotes() {
-            console.log('fetchNotes() function started');
             loadingNotes.style.display = 'block';
             notesContainer.innerHTML = '';
             try {
-                console.log('Attempting to fetch from:', API_URL);
                 const response = await fetch(API_URL, {
-                    method: 'GET', // Añadido explícitamente
-                    headers: {
-                        'Accept': 'application/json' // <--- Para asegurar que Laravel devuelva JSON
-                    },
                     credentials: 'include'
                 });
-                console.log('Fetch response received:', response);
                 if (!response.ok) {
-                    // Si la respuesta no es OK y el estado es 401 (Unauthorized), redirigir al login
-                    if (response.status === 401) {
-                        console.log('Redirecting to login due to 401');
-                        window.location.href = '/login'; // Redirige al login de Breeze
-                        return; // Detiene la ejecución
-                    }
+                    // Quitamos la redirección 401 explícita para volver al estado inicial de depuración
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const notes = await response.json();
-                console.log('Notes received:', notes);
                 loadingNotes.style.display = 'none';
 
                 if (notes.length === 0) {
-                    console.log('No notes found.');
                     notesContainer.innerHTML = '<p class="col-12 text-center text-muted">No hay notas aún. ¡Crea una!</p>';
                     return;
                 }
@@ -149,7 +135,6 @@
                     `;
                     notesContainer.appendChild(noteCard);
                 });
-                console.log('Notes rendered.');
 
                 // Añadir event listeners a los nuevos botones
                 notesContainer.querySelectorAll('.edit-button').forEach(button => {
@@ -184,7 +169,6 @@
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': getCsrfToken()
                     },
                     body: JSON.stringify(noteData),
@@ -210,10 +194,6 @@
         async function editNote(id) {
             try {
                 const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'GET', // Añadido explícitamente
-                    headers: {
-                        'Accept': 'application/json' // <--- Para asegurar que Laravel devuelva JSON
-                    },
                     credentials: 'include'
                 });
                 if (!response.ok) {
@@ -244,7 +224,6 @@
                 const response = await fetch(`${API_URL}/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': getCsrfToken()
                     },
                     credentials: 'include'

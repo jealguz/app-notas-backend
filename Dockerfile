@@ -56,7 +56,7 @@ RUN rm -rf vendor
 # Comandos de construcción de Laravel (Instalación de Composer y optimizaciones)
 # Estos comandos son cruciales para que Laravel funcione correctamente.
 RUN composer install --no-dev --optimize-autoloader --no-scripts
-RUN php artisan key:generate --force # Genera la APP_KEY, ¡esencial para Laravel!
+# RUN php artisan key:generate --force # Genera la APP_KEY, ¡esencial para Laravel!
 RUN php artisan config:cache          # Optimiza la configuración de Laravel
 RUN php artisan route:cache           # Optimiza las rutas de Laravel
 RUN php artisan view:cache            # Optimiza las vistas de Laravel

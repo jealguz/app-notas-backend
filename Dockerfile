@@ -23,6 +23,15 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    # >>> AÑADIDOS para Node.js y npm
+    curl \
+    gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    # <<< FIN de la adición para Node.js y npm
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /etc/nginx/nginx.conf # Elimina el nginx.conf por defecto para usar el nuestro
 
@@ -48,6 +57,14 @@ COPY . .
 # Esto asegura una instalación limpia de las dependencias.
 RUN rm -rf vendor
 
+# >>> AÑADIDOS para la compilación de Vite
+# Instalar dependencias de Node.js
+RUN npm install
+
+# Compilar los assets para producción con Vite
+RUN npm run build
+# <<< FIN de la adición para Vite
+
 # --- REMOVIDA SECCIÓN TEMPORAL PARA DEPURACIÓN DE .ENV ---
 # La línea "RUN echo 'APP_NAME=Laravel...' > .env" ha sido eliminada.
 # Render maneja las variables de entorno de forma segura, y la APP_KEY se generará.
@@ -57,10 +74,10 @@ RUN rm -rf vendor
 # Estos comandos son cruciales para que Laravel funcione correctamente.
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 # RUN php artisan key:generate --force # Genera la APP_KEY, ¡esencial para Laravel!
-# RUN php artisan config:cache          # Optimiza la configuración de Laravel
-# RUN php artisan route:cache           # Optimiza las rutas de Laravel
-# RUN php artisan view:cache            # Optimiza las vistas de Laravel
-# RUN php artisan event:cache           # Opcional: Optimiza los eventos de Laravel
+# RUN php artisan config:cache          # Optimiza la configuración de Laravel
+# RUN php artisan route:cache           # Optimiza las rutas de Laravel
+# RUN php artisan view:cache            # Optimiza las vistas de Laravel
+# RUN php artisan event:cache           # Opcional: Optimiza los eventos de Laravel
 
 # Crear carpetas necesarias para logs y procesos, y establecer permisos
 RUN mkdir -p /var/log/nginx \

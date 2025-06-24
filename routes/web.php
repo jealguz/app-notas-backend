@@ -16,9 +16,10 @@ use App\Http\Controllers\ProfileController; // Importa el controlador de perfil 
 
 // La ruta raíz '/' ahora requiere autenticación y verifica el email.
 // Redirige al login si no estás autenticado, o a la vista 'notes' si sí lo estás.
+// ¡CAMBIO AQUÍ! Se elimina el nombre de la ruta, ya que entra en conflicto con 'notes.index' de la API.
 Route::get('/', function () {
     return view('notes'); // Esta es tu vista de notas (resources/views/notes.blade.php)
-})->middleware(['auth', 'verified'])->name('notes.index'); // Protegemos esta ruta y le damos un nombre.
+})->middleware(['auth', 'verified']); // Ya NO tiene ->name('notes.index')
 
 // Las rutas de autenticación de Laravel Breeze son importadas automáticamente desde auth.php
 require __DIR__.'/auth.php';

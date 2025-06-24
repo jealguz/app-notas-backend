@@ -107,9 +107,9 @@
             try {
                 console.log('Attempting to fetch from:', API_URL);
                 const response = await fetch(API_URL, {
-                    method: 'GET', // Añadido explícitamente
+                    method: 'GET',
                     headers: {
-                        'Accept': 'application/json' // <--- AÑADIDO: Para asegurar que Laravel devuelva JSON
+                        'Accept': 'application/json'
                     },
                     credentials: 'include'
                 });
@@ -117,9 +117,9 @@
                 if (!response.ok) {
                     // Si la respuesta no es OK y el estado es 401 (Unauthorized), redirigir al login
                     if (response.status === 401) {
-                        console.log('Redirecting to login due to 401');
-                        window.location.href = '/login'; // Redirige al login de Breeze
-                        return; // Detiene la ejecución
+                        console.log('Got 401, but NOT redirecting for debugging purposes.'); // Mensaje de depuración
+                        // window.location.href = '/login'; // <--- ¡COMENTA ESTA LÍNEA!
+                        // return; // <--- COMENTA TAMBIÉN ESTA LÍNEA PARA QUE EL ERROR SE PROPAGUE AL CATCH
                     }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -161,7 +161,7 @@
 
             } catch (error) {
                 console.error('Error al cargar las notas:', error);
-                loadingNotes.textContent = 'Error al cargar las notas. Asegúrate de que la API esté funcionando correctamente.';
+                loadingNotes.textContent = 'Error al cargar las notas. Asegúrate de que la API esté funcionando correctamente. (Recibido un 401 o error de red)'; // Mensaje más descriptivo
                 loadingNotes.className = 'col-12 text-center text-danger';
             }
         }
@@ -210,9 +210,9 @@
         async function editNote(id) {
             try {
                 const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'GET', // Añadido explícitamente
+                    method: 'GET',
                     headers: {
-                        'Accept': 'application/json' // <--- AÑADIDO: Para asegurar que Laravel devuelva JSON
+                        'Accept': 'application/json'
                     },
                     credentials: 'include'
                 });

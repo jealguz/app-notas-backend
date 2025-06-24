@@ -57,10 +57,10 @@ RUN rm -rf vendor
 # Estos comandos son cruciales para que Laravel funcione correctamente.
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 # RUN php artisan key:generate --force # Genera la APP_KEY, ¡esencial para Laravel!
-RUN php artisan config:cache          # Optimiza la configuración de Laravel
-RUN php artisan route:cache           # Optimiza las rutas de Laravel
-RUN php artisan view:cache            # Optimiza las vistas de Laravel
-RUN php artisan event:cache           # Opcional: Optimiza los eventos de Laravel
+# RUN php artisan config:cache          # Optimiza la configuración de Laravel
+# RUN php artisan route:cache           # Optimiza las rutas de Laravel
+# RUN php artisan view:cache            # Optimiza las vistas de Laravel
+# RUN php artisan event:cache           # Opcional: Optimiza los eventos de Laravel
 
 # Crear carpetas necesarias para logs y procesos, y establecer permisos
 RUN mkdir -p /var/log/nginx \
@@ -111,7 +111,9 @@ EXPOSE 10000
 
 # Script de inicio final (ejecuta migraciones y luego Supervisor)
 # Hemos "descomentado" esta línea y eliminado las líneas temporales.
+# Modificar esta línea CMD
 CMD sh -c "php artisan migrate --force && \
+    php artisan optimize && \
     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
 # Salud

@@ -104,7 +104,9 @@
             loadingNotes.style.display = 'block'; // Mostrar mensaje de carga
             notesContainer.innerHTML = ''; // Limpiar contenedor
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL, {
+                    credentials: 'include' // <--- CAMBIO AÑADIDO: Incluir cookies con la petición
+                });
                 if (!response.ok) {
                     // Si la respuesta no es OK y el estado es 401 (Unauthorized), redirigir al login
                     if (response.status === 401) {
@@ -148,8 +150,6 @@
 
             } catch (error) {
                 console.error('Error al cargar las notas:', error);
-                // No redirigimos automáticamente a login aquí, ya que el 401 se maneja arriba.
-                // Este catch es para otros errores de red o servidor.
                 loadingNotes.textContent = 'Error al cargar las notas. Asegúrate de que la API esté funcionando correctamente.';
                 loadingNotes.className = 'col-12 text-center text-danger';
             }
@@ -174,9 +174,10 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken() // CAMBIO AÑADIDO: Incluir token CSRF
+                        'X-CSRF-TOKEN': getCsrfToken()
                     },
-                    body: JSON.stringify(noteData)
+                    body: JSON.stringify(noteData),
+                    credentials: 'include' // <--- CAMBIO AÑADIDO: Incluir cookies con la petición
                 });
 
                 if (!response.ok) {
@@ -197,68 +198,4 @@
         // Función para editar una nota
         async function editNote(id) {
             try {
-                const response = await fetch(`${API_URL}/${id}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const note = await response.json();
-
-                noteIdInput.value = note.id;
-                titleInput.value = note.title;
-                contentInput.value = note.content || '';
-                completedInput.checked = note.completed;
-
-                formTitle.textContent = `Editar Nota: ${note.title}`;
-                submitButton.textContent = 'Actualizar Nota';
-                cancelEditButton.classList.remove('d-none');
-            } catch (error) {
-                console.error('Error al cargar nota para edición:', error);
-                alert('No se pudo cargar la nota para edición.');
-            }
-        }
-
-        // Función para eliminar una nota
-        async function deleteNote(id) {
-            if (!confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken() // CAMBIO AÑADIDO: Incluir token CSRF
-                    }
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error de API al eliminar:', errorData);
-                    alert(`Error al eliminar la nota: ${errorData.message || response.statusText}`);
-                    return;
-                }
-
-                fetchNotes(); // Volver a cargar las notas
-            } catch (error) {
-                console.error('Error de red o servidor al eliminar:', error);
-                alert('Error de red o servidor al eliminar la nota.');
-            }
-        }
-
-        // Función para limpiar el formulario
-        function resetForm() {
-            noteIdInput.value = '';
-            noteForm.reset();
-            formTitle.textContent = 'Crear Nueva Nota';
-            submitButton.textContent = 'Guardar Nota';
-            cancelEditButton.classList.add('d-none');
-        }
-
-        // Event listener para el botón de cancelar edición
-        cancelEditButton.addEventListener('click', resetForm);
-
-        // Cargar notas al cargar la página
-        document.addEventListener('DOMContentLoaded', fetchNotes);
-    </script>
-</body>
-</html>
+                const response = await fetch(`${API_URL}/${

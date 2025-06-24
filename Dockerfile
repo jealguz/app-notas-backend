@@ -131,7 +131,10 @@ EXPOSE 10000
 # Modificar esta línea CMD
 CMD sh -c "php artisan migrate --force && \
     php artisan optimize && \
+    php artisan config:clear && \
+    php artisan cache:clear && \
     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+
 
 # Salud
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:10000/ || exit 1

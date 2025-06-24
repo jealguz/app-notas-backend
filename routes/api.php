@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\NoteController; // Importa tu controlador
+use App\Http\Controllers\Api\NoteController; // Asegúrate de importar tu controlador de API
 
 /*
 |--------------------------------------------------------------------------
@@ -10,21 +10,20 @@ use App\Http\Controllers\Api\NoteController; // Importa tu controlador
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
 |
 */
 
-// Route for authenticated user details (often included for Sanctum)
-// You can keep this or remove it if you're not planning authentication yet.
+// Opcional: Ruta para obtener la información del usuario autenticado vía API.
+// Requiere autenticación con 'sanctum'.
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Ruta de prueba simple
-Route::get('/test-api', function () {
-    return response()->json(['message' => 'API de prueba funcionando!']);
+// Protege todas las rutas de la API de notas con el middleware 'auth:sanctum'.
+// Esto significa que para acceder a cualquier operación CRUD de notas,
+// el usuario debe estar autenticado.
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('notes', NoteController::class);
 });
-
-// Rutas para las notas de tu API
-Route::apiResource('notes', NoteController::class);

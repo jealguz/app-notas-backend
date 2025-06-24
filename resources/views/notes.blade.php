@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Notas - Currículum</title>
-    <!-- Incluye Bootstrap CSS -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -42,7 +42,12 @@
     <div class="container mt-5">
         <h1 class="mb-4 text-center">Mis Notas para el Currículum</h1>
 
-        <!-- Formulario para crear/editar notas -->
+        <div class="d-flex justify-content-end mb-3">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-warning btn-sm">Cerrar Sesión</button>
+            </form>
+        </div>
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title" id="form-title">Crear Nueva Nota</h5>
@@ -68,15 +73,12 @@
             </div>
         </div>
 
-        <!-- Contenedor de Notas -->
         <h2 class="mb-3 text-center">Notas Existentes</h2>
         <div id="notes-container" class="row row-cols-1 row-cols-md-2 g-4">
-            <!-- Las notas se cargarán aquí -->
             <p id="loading-notes" class="text-center">Cargando notas...</p>
         </div>
     </div>
 
-    <!-- Incluye Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -92,6 +94,11 @@
         const cancelEditButton = document.getElementById('cancel-edit-button');
         const loadingNotes = document.getElementById('loading-notes');
 
+        // Función para obtener el token CSRF
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+
         // Función para cargar las notas
         async function fetchNotes() {
             loadingNotes.style.display = 'block'; // Mostrar mensaje de carga
@@ -99,6 +106,11 @@
             try {
                 const response = await fetch(API_URL);
                 if (!response.ok) {
+                    // Si la respuesta no es OK y el estado es 401 (Unauthorized), redirigir al login
+                    if (response.status === 401) {
+                        window.location.href = '/login'; // Redirige al login de Breeze
+                        return; // Detiene la ejecución
+                    }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const notes = await response.json();
@@ -136,6 +148,8 @@
 
             } catch (error) {
                 console.error('Error al cargar las notas:', error);
+                // No redirigimos automáticamente a login aquí, ya que el 401 se maneja arriba.
+                // Este catch es para otros errores de red o servidor.
                 loadingNotes.textContent = 'Error al cargar las notas. Asegúrate de que la API esté funcionando correctamente.';
                 loadingNotes.className = 'col-12 text-center text-danger';
             }
@@ -159,7 +173,8 @@
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken() // CAMBIO AÑADIDO: Incluir token CSRF
                     },
                     body: JSON.stringify(noteData)
                 });
@@ -211,7 +226,8 @@
                 const response = await fetch(`${API_URL}/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken() // CAMBIO AÑADIDO: Incluir token CSRF
                     }
                 });
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController; // Importa el controlador de perfil de Breeze
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// La ruta raíz '/' ahora requiere autenticación y verifica el email.
+// Redirige al login si no estás autenticado, o a la vista 'notes' si sí lo estás.
 Route::get('/', function () {
-    // return view('welcome'); // Comenta o elimina esta línea
-    return view('notes'); // Añade esta línea para cargar tu vista 'notes.blade.php'
-});
+    return view('notes'); // Esta es tu vista de notas (resources/views/notes.blade.php)
+})->middleware(['auth', 'verified'])->name('notes.index'); // Protegemos esta ruta y le damos un nombre.
 
-// Asegúrate de que tus rutas de API estén en routes/api.php y no aquí,
-// o si las tienes aquí, asegúrate de que no choquen con rutas de vista.
-// Ejemplo de una ruta de API si la tenías aquí y la necesitas para el frontend
-// Route::get('/api/notes', [App\Http\Controllers\NoteController::class, 'index']);
+// Las rutas de autenticación de Laravel Breeze son importadas automáticamente desde auth.php
+require __DIR__.'/auth.php';
+
+// Opcional: Rutas para la gestión del perfil del usuario (vienen con Laravel Breeze).
+// Solo accesibles si el usuario está autenticado.
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});

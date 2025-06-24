@@ -1,197 +1,139 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Aplicación de Notas Laravel y Vue.js
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+¡Bienvenido al repositorio de la Aplicación de Notas! Este es un sistema de gestión de notas construido con Laravel (para el backend API y lógica de negocio) y Vue.js (para la interfaz de usuario interactiva del frontend).
 
-## About Laravel
+## 📝 Descripción del Proyecto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Esta aplicación permite a los usuarios:
+* Crear nuevas notas.
+* Ver una lista de sus notas.
+* Editar notas existentes.
+* Eliminar notas.
+* **(Añade aquí cualquier otra funcionalidad específica que tenga tu app, ej: autenticación de usuarios, categorización de notas, búsqueda, etc.)**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Está diseñada para ser una plataforma simple y eficiente para organizar tus pensamientos y tareas diarias.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Tecnologías Utilizadas
 
-## Learning Laravel
+El proyecto utiliza una pila tecnológica robusta y moderna:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Backend (Laravel):**
+* **PHP 8.2+**: Lenguaje de programación.
+* **Laravel Framework 10.x**: Framework PHP para la API RESTful.
+* **Base de Datos (Local)**: MySQL
+* **Base de Datos (Producción/Render)**: PostgreSQL
+* **Laravel Breeze**: Andamiaje de autenticación y gestión de usuarios.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Frontend (Vue.js con Vite):**
+* **Vue.js 3**: Framework JavaScript progresivo para la interfaz de usuario.
+* **Vite**: Herramienta de compilación rápida para el frontend.
+* **Tailwind CSS**: Framework CSS para un diseño rápido y responsivo.
+* **Inertia.js**: Adaptador entre Laravel (backend) y Vue.js (frontend) para construir SPAs con la simplicidad de aplicaciones monolíticas.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Despliegue y Contenedorización:**
+* **Docker**: Para la contenerización de la aplicación (PHP-FPM, Nginx, Supervisor).
+* **Render**: Plataforma en la nube para el despliegue continuo.
 
-## Laravel Sponsors
+## ⚙️ Requisitos del Sistema (Desarrollo Local)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Para ejecutar esta aplicación localmente, necesitarás tener instalado:
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# API RESTful de Notas con Laravel
-
-![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
-![Composer](https://img.shields.io/badge/Composer-885630?style=for-the-badge&logo=composer&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-
-Este repositorio contiene la API RESTful (Backend) para una aplicación de gestión de notas, desarrollada con el framework Laravel. Esta API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las notas.
-
----
-
-## 🚀 Funcionalidades
-
-* **Listar Notas:** Obtiene todas las notas existentes.
-* **Crear Nota:** Permite añadir una nueva nota a la base de datos.
-* **Ver Nota Específica:** Recupera los detalles de una nota mediante su ID.
-* **Actualizar Nota:** Modifica una nota existente (título, contenido, estado de completado).
-* **Eliminar Nota:** Borra una nota de la base de datos.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-* **Backend:**
-    * [**Laravel**](https://laravel.com/): Framework PHP para el desarrollo de aplicaciones web.
-    * **PHP:** Lenguaje de programación.
-    * **Composer:** Administrador de dependencias de PHP.
-* **Base de Datos:**
-    * **MySQL:** Sistema de gestión de bases de datos relacionales.
-* **Control de Versiones:**
-    * **Git:** Sistema de control de versiones distribuido.
-    * **GitHub:** Plataforma para alojamiento de repositorios Git.
-
----
-
-## ⚙️ Configuración y Ejecución Local
-
-Sigue estos pasos para poner en marcha la API en tu entorno local.
-
-### Prerrequisitos
-
-Asegúrate de tener instalado lo siguiente:
-
-* **PHP** (versión 8.1 o superior, preferiblemente la que se ajuste a tu versión de Laravel).
-* **Composer**
-* **Node.js y npm** (aunque no es estrictamente necesario para la API, es útil para el desarrollo Laravel en general).
-* **MySQL** (o cualquier otro sistema de base de datos compatible).
+* **Docker Desktop** (incluye Docker Engine y Docker Compose)
 * **Git**
+* **Un servidor de base de datos MySQL** (ej. a través de XAMPP, Laragon, o un contenedor Docker de MySQL)
+* **Un navegador web moderno**
 
-### Pasos de Instalación
+## 💻 Instalación y Ejecución Local
+
+Sigue estos pasos para configurar y ejecutar el proyecto en tu máquina local:
 
 1.  **Clonar el Repositorio:**
     ```bash
-    git clone [https://github.com/](https://github.com/)[TU_USUARIO_GITHUB]/api-notas-backend.git
-    cd api-notas-backend
+    git clone [https://github.com/jeajguz/app-notas-backend.git](https://github.com/jeajguz/app-notas-backend.git)
+    cd app-notas-backend
     ```
 
-2.  **Instalar Dependencias de Composer:**
-    ```bash
-    composer install
-    ```
-
-3.  **Configurar el Archivo `.env`:**
-    * Copia el archivo de ejemplo `.env.example` a `.env`:
+2.  **Configuración del Entorno (`.env`):**
+    * Crea un archivo `.env` en la raíz del proyecto. Puedes copiar el ejemplo:
         ```bash
         cp .env.example .env
         ```
-    * Abre el archivo `.env` y configura tus credenciales de base de datos:
+    * Abre el archivo `.env` y configura las variables de entorno necesarias para **desarrollo local (MySQL)**. Asegúrate de que las líneas de PostgreSQL estén comentadas o eliminadas para tu entorno local.
         ```dotenv
+        APP_NAME=Laravel
+        APP_ENV=local
+        APP_KEY= # Se generará en el siguiente paso
+        APP_DEBUG=true # Recomendado para desarrollo local
+        APP_URL=http://localhost:10000 # O el puerto que uses localmente
+
         DB_CONNECTION=mysql
         DB_HOST=127.0.0.1
-        DB_PORT=3306
-        DB_DATABASE=laravelapi_notas_db  # Asegúrate de que este sea el nombre de tu BD
-        DB_USERNAME=root                 # Tu usuario de MySQL
-        DB_PASSWORD=                     # Tu contraseña de MySQL (vacía si no tienes)
+        DB_PORT=3310 # Asegúrate de que tu MySQL escuche en este puerto
+        DB_DATABASE=api_notas_local # <-- ¡Verifica este nombre en tu servidor MySQL!
+        DB_USERNAME=root
+        DB_PASSWORD=1234 # <-- ¡Asegúrate de que esta sea la contraseña correcta de tu MySQL!
         ```
-    * También puedes ajustar `APP_DEBUG=true` para ver errores detallados durante el desarrollo.
+    * **Asegúrate de que tu servidor MySQL local esté corriendo** y que la base de datos `api_notas_local` exista (o cámbiala a una existente) y que las credenciales sean correctas.
 
-4.  **Generar la Clave de la Aplicación:**
-    ```bash
-    php artisan key:generate
-    ```
-
-5.  **Configurar la Base de Datos y Ejecutar Migraciones:**
-    * Asegúrate de que tu servidor MySQL esté en funcionamiento.
-    * Crea una base de datos llamada `laravelapi_notas_db` (o el nombre que configuraste en `.env`) en tu sistema de gestión de bases de datos (ej. phpMyAdmin).
-    * Ejecuta las migraciones para crear las tablas necesarias:
+3.  **Generar la Clave de Aplicación (Laravel):**
+    * Si aún no tienes la `APP_KEY` en tu `.env`, ejecuta este comando Docker para generarla:
         ```bash
-        php artisan migrate
+        docker run --rm -v "$(pwd):/app" php:8.2-fpm-bookworm php /app/artisan key:generate
+        ```
+        *Esto generará la `APP_KEY` en tu archivo `.env`.*
+
+4.  **Construir y Levantar los Contenedores Docker:**
+    * Asegúrate de que tu `Dockerfile` esté configurado correctamente con los pasos para Composer y Vite.
+    * Si usas Docker Compose para tu base de datos MySQL local (en lugar de XAMPP/localhost), ajusta `DB_HOST` en `.env` al nombre del servicio de MySQL en tu `docker-compose.yml`.
+    * Construye las imágenes Docker y levanta los servicios:
+        ```bash
+        docker compose up --build -d
+        # O si usas docker-compose (versiones antiguas)
+        # docker-compose up --build -d
         ```
 
-6.  **Iniciar el Servidor de Desarrollo:**
+5.  **Ejecutar Migraciones de Base de Datos:**
     ```bash
-    php artisan serve
+    docker exec <nombre_del_contenedor_php> php artisan migrate
+    # Para encontrar el nombre del contenedor: docker ps
+    # Ejemplo: docker exec app-notas-backend-app-1 php artisan migrate
     ```
-    La API estará disponible en `http://127.0.0.1:8000`.
+    *Si tienes seeders, puedes ejecutarlos con `php artisan db:seed`.*
 
----
+6.  **Acceder a la Aplicación:**
+    * La aplicación debería estar accesible en tu navegador en `http://localhost:10000` (o el puerto que hayas configurado en tu `default.conf` de Nginx y que hayas expuesto en tu `Dockerfile`).
 
-## 💡 Uso de la API (Endpoints)
+## ☁️ Despliegue en Render
 
-Puedes usar herramientas como [Postman](https://www.postman.com/downloads/) o [Insomnia](https://insomnia.rest/download) para probar los endpoints.
+Esta aplicación está diseñada para ser desplegada continuamente en Render.com.
 
-La URL base para todos los endpoints es `http://127.0.0.1:8000/api`.
-
-| Método HTTP | Endpoint       | Descripción                | Cuerpo de la Petición (JSON) Ejemplo | Respuesta (JSON) Ejemplo             |
-| :---------- | :------------- | :------------------------- | :---------------------------------- | :----------------------------------- |
-| `GET`       | `/notes`       | Obtener todas las notas    | `N/A`                               | `[{"id": 1, "title": "...", ...}]` |
-| `POST`      | `/notes`       | Crear una nueva nota       | `{ "title": "Comprar pan", "content": "...", "completed": false }` | `{"id": 2, "title": "...", ...}`    |
-| `GET`       | `/notes/{id}`  | Obtener una nota por ID    | `N/A`                               | `{"id": 1, "title": "...", ...}`    |
-| `PUT/PATCH` | `/notes/{id}`  | Actualizar una nota        | `{ "content": "...", "completed": true }` | `{"id": 1, "title": "...", ...}`    |
-| `DELETE`    | `/notes/{id}`  | Eliminar una nota          | `N/A`                               | (No Content - 204)                   |
-
----
+**Configuración en Render:**
+* **Tipo de Servicio**: Web Service (Docker).
+* **Repositorio**: Conecta tu repositorio de GitHub `https://github.com/jeajguz/app-notas-backend.git`.
+* **Branch**: `main` (o tu rama principal).
+* **Docker Context Directory**: `.` (el punto, si tu Dockerfile está en la raíz).
+* **Docker Command**: Vacío (para que use el `CMD` de tu Dockerfile).
+* **Puerto**: `10000` (Debe coincidir con el `EXPOSE` de tu Dockerfile y el `listen` de Nginx).
+* **Variables de Entorno**: Configura todas las variables de tu `.env` de producción en la sección "Environment" de Render. Para la base de datos de Render (PostgreSQL), usa:
+    * `APP_URL`: La URL pública de tu servicio en Render (ej. `https://app-notas-backend-g3kr.onrender.com`).
+    * `APP_KEY`: Déjala en blanco para que Render la genere automáticamente o usa una que hayas generado y quieras fijar.
+    * `APP_ENV=production`
+    * `APP_DEBUG=false`
+    * **`DATABASE_URL="postgresql://notas_app_db_user:Rr7kHI23HCNREM5h8DRoubZePBUmwjFZ@dpg-d1as2gp5pdvs73d862pg-a/notas_app_db"`**
+        * (Asegúrate de descomentar o incluir esta línea y de que el `DB_CONNECTION` adecuado sea `pgsql` en tu `.env` para producción, si lo envías con esa configuración).
+    * `DB_CONNECTION=pgsql` (Si no usas `DATABASE_URL` y configuras las credenciales por separado).
 
 ## 🤝 Contribución
 
-Las contribuciones son bienvenidas. Si encuentras algún error o tienes sugerencias, por favor abre un 'issue' o envía un 'pull request'.
+Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+1.  Haz un "fork" del repositorio.
+2.  Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
+3.  Realiza tus cambios y commitea (`git commit -am 'Añadir nueva funcionalidad'`).
+4.  Sube tu rama (`git push origin feature/nueva-funcionalidad`).
+5.  Crea un "Pull Request".
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
 
 ---
-
-## 👤 Autor
-
-**Jeison Guzmán Londoño**
-* LinkedIn: [https://www.linkedin.com/in/jeison-guzman-ba8491315/](https://www.linkedin.com/in/jeison-guzman-ba8491315/)
-* GitHub: [https://github.com/jealguz](https://github.com/jealguz)
-
----
-
-## 📜 Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
->>>>>>> 3c7e2b6d94209857744db301d459ba01ce8b03cc

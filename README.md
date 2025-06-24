@@ -9,7 +9,8 @@ Esta aplicación permite a los usuarios:
 * Ver una lista de sus notas.
 * Editar notas existentes.
 * Eliminar notas.
-* **(Añade aquí cualquier otra funcionalidad específica que tenga tu app, ej: autenticación de usuarios, categorización de notas, búsqueda, etc.)**
+* autenticación de usuarios.
+
 
 Está diseñada para ser una plataforma simple y eficiente para organizar tus pensamientos y tareas diarias.
 

@@ -1,140 +1,138 @@
-# Aplicación de Notas Laravel y Vue.js
+# Aplicación de Notas Pública
 
-¡Bienvenido al repositorio de la Aplicación de Notas! Este es un sistema de gestión de notas construido con Laravel (para el backend API y lógica de negocio) y Vue.js (para la interfaz de usuario interactiva del frontend).
+¡Bienvenido a la Aplicación de Notas! Este es un proyecto simple desarrollado con Laravel y Bootstrap que permite a los usuarios crear, leer, actualizar y eliminar notas de forma pública, sin necesidad de autenticación.
 
-## 📝 Descripción del Proyecto
+## Características
 
-Esta aplicación permite a los usuarios:
-* Crear nuevas notas.
-* Ver una lista de sus notas.
-* Editar notas existentes.
-* Eliminar notas.
-* autenticación de usuarios.
+* **CRUD Completo:** Permite crear, listar, editar y eliminar notas.
+* **Interfaz Sencilla:** Desarrollado con Bootstrap para una experiencia de usuario limpia.
+* **API RESTful:** Las operaciones de notas se manejan a través de una API RESTful.
+* **Sin Autenticación:** Acceso público a todas las funcionalidades de notas.
 
+## Tecnologías Utilizadas
 
-Está diseñada para ser una plataforma simple y eficiente para organizar tus pensamientos y tareas diarias.
+* **Backend:**
+    * Laravel (Framework PHP)
+    * PHP
+    * PostgreSQL (Base de datos utilizada en producción en Render)
+* **Frontend:**
+    * HTML, CSS (Bootstrap 5)
+    * JavaScript (Vanilla JS para interacciones con la API)
+* **Despliegue:**
+    * Render (Plataforma de despliegue en la nube)
+    * Git / GitHub
 
-## 🚀 Tecnologías Utilizadas
+## Instalación Local
 
-El proyecto utiliza una pila tecnológica robusta y moderna:
-
-**Backend (Laravel):**
-* **PHP 8.2+**: Lenguaje de programación.
-* **Laravel Framework 10.x**: Framework PHP para la API RESTful.
-* **Base de Datos (Local)**: MySQL
-* **Base de Datos (Producción/Render)**: PostgreSQL
-* **Laravel Breeze**: Andamiaje de autenticación y gestión de usuarios.
-
-**Frontend (Vue.js con Vite):**
-* **Vue.js 3**: Framework JavaScript progresivo para la interfaz de usuario.
-* **Vite**: Herramienta de compilación rápida para el frontend.
-* **Tailwind CSS**: Framework CSS para un diseño rápido y responsivo.
-* **Inertia.js**: Adaptador entre Laravel (backend) y Vue.js (frontend) para construir SPAs con la simplicidad de aplicaciones monolíticas.
-
-**Despliegue y Contenedorización:**
-* **Docker**: Para la contenerización de la aplicación (PHP-FPM, Nginx, Supervisor).
-* **Render**: Plataforma en la nube para el despliegue continuo.
-
-## ⚙️ Requisitos del Sistema (Desarrollo Local)
-
-Para ejecutar esta aplicación localmente, necesitarás tener instalado:
-
-* **Docker Desktop** (incluye Docker Engine y Docker Compose)
-* **Git**
-* **Un servidor de base de datos MySQL** (ej. a través de XAMPP, Laragon, o un contenedor Docker de MySQL)
-* **Un navegador web moderno**
-
-## 💻 Instalación y Ejecución Local
-
-Sigue estos pasos para configurar y ejecutar el proyecto en tu máquina local:
+Sigue estos pasos para configurar el proyecto en tu máquina local.
 
 1.  **Clonar el Repositorio:**
     ```bash
-    git clone [https://github.com/jeajguz/app-notas-backend.git](https://github.com/jeajguz/app-notas-backend.git)
+    git clone [https://github.com/jealguz/app-notas-backend]
     cd app-notas-backend
     ```
 
-2.  **Configuración del Entorno (`.env`):**
-    * Crea un archivo `.env` en la raíz del proyecto. Puedes copiar el ejemplo:
-        ```bash
-        cp .env.example .env
-        ```
-    * Abre el archivo `.env` y configura las variables de entorno necesarias para **desarrollo local (MySQL)**. Asegúrate de que las líneas de PostgreSQL estén comentadas o eliminadas para tu entorno local.
-        ```dotenv
-        APP_NAME=Laravel
-        APP_ENV=local
-        APP_KEY= # Se generará en el siguiente paso
-        APP_DEBUG=true # Recomendado para desarrollo local
-        APP_URL=http://localhost:10000 # O el puerto que uses localmente
 
-        DB_CONNECTION=mysql
-        DB_HOST=127.0.0.1
-        DB_PORT=3310 # Asegúrate de que tu MySQL escuche en este puerto
-        DB_DATABASE=api_notas_local # <-- ¡Verifica este nombre en tu servidor MySQL!
-        DB_USERNAME=root
-        DB_PASSWORD=1234 # <-- ¡Asegúrate de que esta sea la contraseña correcta de tu MySQL!
-        ```
-    * **Asegúrate de que tu servidor MySQL local esté corriendo** y que la base de datos `api_notas_local` exista (o cámbiala a una existente) y que las credenciales sean correctas.
-
-3.  **Generar la Clave de Aplicación (Laravel):**
-    * Si aún no tienes la `APP_KEY` en tu `.env`, ejecuta este comando Docker para generarla:
-        ```bash
-        docker run --rm -v "$(pwd):/app" php:8.2-fpm-bookworm php /app/artisan key:generate
-        ```
-        *Esto generará la `APP_KEY` en tu archivo `.env`.*
-
-4.  **Construir y Levantar los Contenedores Docker:**
-    * Asegúrate de que tu `Dockerfile` esté configurado correctamente con los pasos para Composer y Vite.
-    * Si usas Docker Compose para tu base de datos MySQL local (en lugar de XAMPP/localhost), ajusta `DB_HOST` en `.env` al nombre del servicio de MySQL en tu `docker-compose.yml`.
-    * Construye las imágenes Docker y levanta los servicios:
-        ```bash
-        docker compose up --build -d
-        # O si usas docker-compose (versiones antiguas)
-        # docker-compose up --build -d
-        ```
-
-5.  **Ejecutar Migraciones de Base de Datos:**
+2.  **Instalar Dependencias de PHP:**
     ```bash
-    docker exec <nombre_del_contenedor_php> php artisan migrate
-    # Para encontrar el nombre del contenedor: docker ps
-    # Ejemplo: docker exec app-notas-backend-app-1 php artisan migrate
+    composer install
     ```
-    *Si tienes seeders, puedes ejecutarlos con `php artisan db:seed`.*
 
-6.  **Acceder a la Aplicación:**
-    * La aplicación debería estar accesible en tu navegador en `http://localhost:10000` (o el puerto que hayas configurado en tu `default.conf` de Nginx y que hayas expuesto en tu `Dockerfile`).
+3.  **Instalar Dependencias de JavaScript y Compilar Assets:**
+    ```bash
+    npm install
+    npm run build
+    ```
 
-## ☁️ Despliegue en Render
+4.  **Configurar el Archivo de Entorno (`.env`):**
+    Copia el archivo `.env.example` y renómbralo a `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    Abre el archivo `.env` y configura tus credenciales de base de datos local (MySQL, PostgreSQL, SQLite, etc.). Ejemplo para MySQL:
+    ```dotenv
+    APP_NAME="Notas App"
+    APP_ENV=local
+    APP_KEY=base64:TuAppKeyGenerada
+    APP_DEBUG=true
+    APP_URL=http://localhost
 
-Esta aplicación está diseñada para ser desplegada continuamente en Render.com.
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=nombre_de_tu_db_local
+    DB_USERNAME=tu_usuario_db
+    DB_PASSWORD=tu_password_db
+    ```
+    *(Nota: `APP_KEY` se generará en el siguiente paso).*
 
-**Configuración en Render:**
-* **Tipo de Servicio**: Web Service (Docker).
-* **Repositorio**: Conecta tu repositorio de GitHub `https://github.com/jeajguz/app-notas-backend.git`.
-* **Branch**: `main` (o tu rama principal).
-* **Docker Context Directory**: `.` (el punto, si tu Dockerfile está en la raíz).
-* **Docker Command**: Vacío (para que use el `CMD` de tu Dockerfile).
-* **Puerto**: `10000` (Debe coincidir con el `EXPOSE` de tu Dockerfile y el `listen` de Nginx).
-* **Variables de Entorno**: Configura todas las variables de tu `.env` de producción en la sección "Environment" de Render. Para la base de datos de Render (PostgreSQL), usa:
-    * `APP_URL`: La URL pública de tu servicio en Render (ej. `https://app-notas-backend-g3kr.onrender.com`).
-    * `APP_KEY`: Déjala en blanco para que Render la genere automáticamente o usa una que hayas generado y quieras fijar.
-    * `APP_ENV=production`
-    * `APP_DEBUG=false`
-    * **`DATABASE_URL="postgresql://notas_app_db_user:Rr7kHI23HCNREM5h8DRoubZePBUmwjFZ@dpg-d1as2gp5pdvs73d862pg-a/notas_app_db"`**
-        * (Asegúrate de descomentar o incluir esta línea y de que el `DB_CONNECTION` adecuado sea `pgsql` en tu `.env` para producción, si lo envías con esa configuración).
-    * `DB_CONNECTION=pgsql` (Si no usas `DATABASE_URL` y configuras las credenciales por separado).
+5.  **Generar la Clave de Aplicación:**
+    ```bash
+    php artisan key:generate
+    ```
 
-## 🤝 Contribución
+6.  **Ejecutar Migraciones de Base de Datos:**
+    Esto creará la tabla `notes` en tu base de datos local.
+    ```bash
+    php artisan migrate
+    ```
 
-Si deseas contribuir a este proyecto, por favor sigue estos pasos:
-1.  Haz un "fork" del repositorio.
-2.  Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
-3.  Realiza tus cambios y commitea (`git commit -am 'Añadir nueva funcionalidad'`).
-4.  Sube tu rama (`git push origin feature/nueva-funcionalidad`).
-5.  Crea un "Pull Request".
+7.  **Crear Enlace Simbólico para el Almacenamiento (si es necesario):**
+    ```bash
+    php artisan storage:link
+    ```
 
-## 📄 Licencia
+8.  **Iniciar el Servidor de Desarrollo:**
+    ```bash
+    php artisan serve
+    ```
+    La aplicación estará disponible en `http://127.0.0.1:8000`.
 
-Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
+## Despliegue en Render
+
+Esta aplicación está diseñada para ser desplegada en Render. A continuación, se detallan los pasos y la configuración específica:
+
+### 1. Requisitos de Render
+
+* Una cuenta en [Render.com](https://render.com).
+* Un repositorio GitHub con el código de la aplicación.
+* Una base de datos PostgreSQL en Render.
+
+### 2. Configuración del Servicio Web en Render
+
+Al crear un nuevo **Web Service** en Render, utiliza la siguiente configuración:
+
+* **Name:** `tu-nombre-de-app-en-render` (ej. `mis-notas-publicas`)
+* **Region:** La más cercana a tu ubicación o a la de tu base de datos.
+* **Branch:** `main` (o `master`).
+* **Root Directory:** Vacío (si tu proyecto Laravel está en la raíz del repositorio).
+* **Runtime:** `PHP`
+* **Build Command:**
+    ```bash
+    composer install && npm run build
+    ```
+* **Start Command:**
+    ```bash
+    php artisan migrate --force && php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan storage:link && php artisan serve --host=0.0.0.0 --port=$PORT
+    ```
+
+### 3. Variables de Entorno en Render
+
+Configura las siguientes variables en la sección "Environment" de tu servicio web en Render:
+
+* `APP_KEY`: El valor generado por `php artisan key:generate --show` (sin el `base64:` si tu terminal lo muestra, solo la cadena en sí).
+* `APP_URL`: La URL de tu servicio web de Render (ej. `https://mis-notas-publicas.onrender.com`).
+* `APP_ENV`: `production`
+* `APP_DEBUG`: `false`
+* `DB_CONNECTION`: `pgsql`
+* `DATABASE_URL`: La URL de conexión de tu base de datos PostgreSQL en Render.
+
+### Uso de la Aplicación
+
+Una vez desplegada, puedes acceder a la aplicación a través de la URL proporcionada por Render. Podrás crear, editar y eliminar notas directamente desde la interfaz.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un "issue" o envía un "pull request" si encuentras algún error o tienes sugerencias.
 
 ---

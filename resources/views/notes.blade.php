@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Notas - Currículum</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -42,12 +41,6 @@
     <div class="container mt-5">
         <h1 class="mb-4 text-center">Mis Notas para el Currículum</h1>
 
-        <div class="d-flex justify-content-end mb-3">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-warning btn-sm">Cerrar Sesión</button>
-            </form>
-        </div>
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title" id="form-title">Crear Nueva Nota</h5>
@@ -94,25 +87,21 @@
         const cancelEditButton = document.getElementById('cancel-edit-button');
         const loadingNotes = document.getElementById('loading-notes');
 
-        // Función para obtener el token CSRF
-        function getCsrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }
+        // FUNCIÓN getCsrfToken() ELIMINADA, ya no se necesita.
+        // function getCsrfToken() {
+        //     return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        // }
 
         // Función para cargar las notas
         async function fetchNotes() {
             loadingNotes.style.display = 'block';
             notesContainer.innerHTML = '';
             try {
-                const response = await fetch(API_URL, {
-                    credentials: 'include'
-                });
+                // Ya NO se necesitan credentials: 'include' si la API es pública
+                const response = await fetch(API_URL);
+
                 if (!response.ok) {
-                    // *** ESTA ES LA LÓGICA DE REDIRECCIÓN 401 QUE TENÍAMOS ***
-                    if (response.status === 401) {
-                        window.location.href = '/login';
-                        return;
-                    }
+                    // ELIMINADA: Lógica de redirección 401
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const notes = await response.json();
@@ -173,10 +162,10 @@
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken()
+                        // 'X-CSRF-TOKEN': getCsrfToken() // ELIMINADO
                     },
                     body: JSON.stringify(noteData),
-                    credentials: 'include'
+                    // credentials: 'include' // ELIMINADO
                 });
 
                 if (!response.ok) {
@@ -198,7 +187,7 @@
         async function editNote(id) {
             try {
                 const response = await fetch(`${API_URL}/${id}`, {
-                    credentials: 'include'
+                    // credentials: 'include' // ELIMINADO
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -228,9 +217,9 @@
                 const response = await fetch(`${API_URL}/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'X-CSRF-TOKEN': getCsrfToken()
+                        // 'X-CSRF-TOKEN': getCsrfToken() // ELIMINADO
                     },
-                    credentials: 'include'
+                    // credentials: 'include' // ELIMINADO
                 });
 
                 if (!response.ok) {

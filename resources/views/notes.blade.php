@@ -108,7 +108,6 @@
                     credentials: 'include'
                 });
                 if (!response.ok) {
-                    // Quitamos la redirección 401 explícita para volver al estado inicial de depuración
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const notes = await response.json();

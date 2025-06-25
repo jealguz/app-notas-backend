@@ -108,6 +108,11 @@
                     credentials: 'include'
                 });
                 if (!response.ok) {
+                    // *** ESTA ES LA LÓGICA DE REDIRECCIÓN 401 QUE TENÍAMOS ***
+                    if (response.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const notes = await response.json();
